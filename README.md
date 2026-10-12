@@ -343,43 +343,6 @@ Viết README.md với những yêu cầu sau:
 Tài liệu tham khảo: https://www.studocu.vn/vn/document/dai-hoc-dien-luc/dien-luc-university/bao-cao-nhap-mon-tri-tue-nhan-tao/88382780?sid=a353be05-df77-4401-bae7-4597fba4fd601791775595
 Kết quả: tạo README.md với cấu trúc hiện tại, đủ 12 mục kế hoạch và nhật ký prompt này. Đối chiếu cây mã nguồn/tài nguyên với hệ thống file; không chạy build hoặc test vì chỉ thay đổi tài liệu.
 
-### 12/10/2026 — Sửa Board.qml để chạy local
-
-Nội dung prompt của người dùng:
-
-```text
-Sửa lại file tại tôi đang muốn fix bug Board.qml khi chạy local. Hiện tại chưa thêm server vì muốn sau này server sẽ là c++
-```
-
-Kết quả: sửa tham chiếu `gameManager` trong Board.qml, khai báo property `boardState` và thông báo cập nhật cho QML. Thêm lượt chơi local đen/trắng, hiển thị lượt hiện tại; giữ bàn cờ co theo kích thước cửa sổ và vẽ lại grid khi đổi kích thước. Mở Board trực tiếp, bỏ tự kết nối server lúc khởi động. Sửa việc duyệt nhóm quân bị ăn để tránh thay đổi vector đang duyệt. Chưa triển khai server.
-
-Kiểm tra: build thành công bằng `cmake --build build/Desktop_Debug --parallel 3`; chạy ứng dụng bằng Qt offscreen trong 3 giây không báo lỗi QML (timeout chủ động dừng ứng dụng). Bài kiểm tra C++ tạm kiểm tra property QML, 361 ô, đặt quân, đổi lượt, từ chối tọa độ ngoài bàn và ô đã có quân, ăn quân góc và chặn tự sát; tất cả đều đạt. Chưa kiểm tra thao tác chuột trực tiếp trên cửa sổ.
-
-### 12/10/2026 — Tạo server WebSocket C++ đọc/ghi JSON
-
-Nội dung prompt của người dùng:
-
-```text
-Trong file server tạo 1 websocket cơ bản đọc và ghi dữ liệu bằng file json
-```
-
-Kết quả: chuyển target `server/appserver` sang ứng dụng console C++/Qt Core, Network, WebSockets; nghe localhost cổng 14509, hỗ trợ `ReadData`/`WriteData` với envelope `{type,payload}`. Lưu JSON object vào file cấu hình bằng `--data-file`, ghi nguyên tử bằng `QSaveFile`, phản hồi lỗi khi JSON/yêu cầu/file không hợp lệ. Hướng dẫn chạy và giao thức tại [server/README.md](server/README.md). Chưa tích hợp đồng bộ Board, xác thực hoặc ghép trận.
-
-Kiểm tra: build server thành công; CTest integration đạt, kiểm tra WebSocket thực với hai client, ghi file, đọc lại sau restart, từ chối dữ liệu sai và giữ file hỏng. Kiểm tra socket chạy ngoài sandbox vì sandbox chặn mở cổng localhost.
-
-### 12/10/2026 — Sửa lỗi không kết nối server
-
-Nội dung prompt của người dùng:
-
-```text
-xử lí lỗi chính không connect được server
-```
-
-Kết quả: khôi phục kết nối WebSocket lúc client khởi động; sửa nút reconnect dùng `networkClient.serverUrl` thay cho property `Constants.serverUrl` đã bị comment. Thêm trạng thái/lỗi và nút kết nối lại trên màn hình đăng nhập. Khi kết nối lại, hủy socket cũ trước khi mở kết nối mới và xóa lỗi cũ khi kết nối thành công. Giữ địa chỉ mặc định hiện có `ws://127.0.0.1:14509`, cập nhật tài liệu dùng biến `GOGAME_SERVER_URL`.
-
-Kiểm tra: build client và server thành công; bài integration dùng chính lớp `NetworkClient` kết nối server thực, gửi/nhận JSON, báo lỗi URL sai và kết nối lại đều đạt, cùng các kiểm tra lưu JSON trước đó. Server vẫn chỉ hỗ trợ `ReadData`/`WriteData`; Auth/Matchmaking chưa được triển khai.
-
-
 ### 12/10/2026 — Cập nhật README về server và component template
 
 Nội dung prompt của người dùng (chuẩn hóa xuống dòng):
