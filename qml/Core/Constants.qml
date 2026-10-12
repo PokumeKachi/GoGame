@@ -16,5 +16,5 @@ QtObject {
 
     readonly property int animationSpeed: 200
 
-    // readonly property string serverUrl: networkClient.serverUrl
+    readonly property string serverUrl: networkClient.serverUrl
 }

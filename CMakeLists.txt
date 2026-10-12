@@ -61,8 +61,6 @@ SOURCES src/Core/Enumutils.h src/Core/Enumutils.cpp
 SOURCES src/Managers/MatchmakingManager.h src/Managers/MatchmakingManager.cpp
 QML_FILES qml/Screens/SettingsScreen.qml
 QML_FILES qml/Screens/Board.qml
-
-
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

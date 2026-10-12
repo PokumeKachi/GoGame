@@ -21,7 +21,7 @@ Rectangle {
         function onMatchFound(matchId, playerIndex, opponentName) {
             console.log("Match found:", matchId, playerIndex, opponentName);
             deckManager.refreshValidDecks(authManager.username);
-            stack.push("./DeckSelectScreen.qml");
+            stack.push("./Board.qml");
         }
 
         function onMatchmakingError(message) {
@@ -167,10 +167,6 @@ Rectangle {
                     matchmakingManager.cancelMatchmaking();
                 } else {
                     deckManager.refreshValidDecks(authManager.username);
-                    if (deckManager.validDecks.length === 0) {
-                        mainMenuRoot.deckError = "Create a deck with exactly 3 unique characters and 30 valid cards first.";
-                        return;
-                    }
                     mainMenuRoot.deckError = "";
                     matchmakingManager.startMatchmaking("Game1", "");
                 }
@@ -211,6 +207,6 @@ Rectangle {
         id: reconnectTimer
         interval: 250
         repeat: false
-        onTriggered: networkClient.connectToServer(Constants.serverUrl)
+        onTriggered: networkClient.connectToServer(networkClient.serverUrl)
     }
 }
