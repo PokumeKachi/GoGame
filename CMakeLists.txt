@@ -8,6 +8,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 6.2 COMPONENTS Quick Sql REQUIRED)
 find_package(Qt6 6.2 COMPONENTS Quick REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS WebSockets)
+find_package(Qt6 REQUIRED COMPONENTS
+    Core
+    Gui
+    Multimedia
+)
 
 qt_add_executable(appGoGame
     main.cpp
@@ -44,6 +49,8 @@ qt_add_qml_module(appGoGame
         qml/Components/controls/GameText.qml
         qml/Components/layout/GameBackground.qml
         qml/Components/layout/GamePanel.qml
+        qml/Screens/SettingsScreen.qml
+        qml/Screens/Board.qml
         qml/Core/Constants.qml
         qml/Core/Motion.qml
         qml/Core/Radius.qml
@@ -54,13 +61,28 @@ qt_add_qml_module(appGoGame
         qml/Screens/LoginScreen.qml
         qml/Screens/MainMenu.qml
         main.qml
-SOURCES src/Core/AI.cpp src/Core/AI.h src/Core/Game.cpp src/Core/Game.h src/Managers/AuthManager.cpp src/Managers/AuthManager.h src/Models/Board.cpp src/Models/Board.h src/Models/UI.cpp src/Models/UI.h src/Network/NetworkClient.cpp src/Network/NetworkClient.h src/Network/Protocol.cpp src/Network/Protocol.h main.cpp
-RESOURCES users.sqlite
-SOURCES src/Core/Enums.h
-SOURCES src/Core/Enumutils.h src/Core/Enumutils.cpp
-SOURCES src/Managers/MatchmakingManager.h src/Managers/MatchmakingManager.cpp
-QML_FILES qml/Screens/SettingsScreen.qml
-QML_FILES qml/Screens/Board.qml
+    SOURCES
+        src/Core/AI.cpp
+        src/Core/AI.h
+        src/Core/Game.cpp
+        src/Core/Game.h
+        src/Core/Enums.h
+        src/Core/Enumutils.h
+        src/Core/Enumutils.cpp
+        src/Managers/AssetManager.h
+        src/Managers/AssetManager.cpp
+        src/Managers/AuthManager.h
+        src/Managers/AuthManager.cpp
+        src/Managers/MatchmakingManager.h
+        src/Managers/MatchmakingManager.cpp
+        src/Models/Board.cpp
+        src/Models/Board.h
+        src/Models/UI.cpp
+        src/Models/UI.h
+        src/Network/NetworkClient.cpp
+        src/Network/NetworkClient.h
+        src/Network/Protocol.cpp
+        src/Network/Protocol.h
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -74,9 +96,15 @@ set_target_properties(appGoGame PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
+target_include_directories(appGoGame PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/Managers"
+)
+
 target_link_libraries(appGoGame
     PRIVATE
         Qt6::Core
+        Qt6::Gui
+        Qt6::Multimedia
         Qt6::Quick
         Qt6::Qml
         Qt6::Network
