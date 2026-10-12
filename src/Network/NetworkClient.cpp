@@ -7,8 +7,8 @@
 NetworkClient::NetworkClient(QObject *parent)
     : QObject(parent),
       m_serverUrl(qEnvironmentVariable(
-                      "LUMIETCG_SERVER_URL",
-                      QStringLiteral("wss://127.0.0.1:14509"))
+                      "GOGAME_SERVER_URL",
+                      QStringLiteral("ws://127.0.0.1:14509"))
                       .trimmed()) {
   connect(&m_socket, &QWebSocket::connected, this,
           &NetworkClient::handleConnected);
@@ -37,6 +37,7 @@ void NetworkClient::connectToServer(const QString &url) {
     emit errorOccurred(m_lastError);
     return;
   }
+  m_socket.abort();
   setLastError(QString());
   m_socket.open(endpoint);
 }
@@ -60,6 +61,7 @@ void NetworkClient::sendMessage(const QJsonObject &message) {
 }
 
 void NetworkClient::handleConnected() {
+  setLastError(QString());
   m_connected = true;
   emit connectedChanged();
   emit connected();

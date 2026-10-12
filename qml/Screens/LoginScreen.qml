@@ -72,6 +72,13 @@ Rectangle {
                 }
             }
 
+            Button {
+                Layout.alignment: Qt.AlignHCenter
+                text: qsTr("Kết nối lại server")
+                visible: !networkClient.connected
+                onClicked: networkClient.connectToServer(networkClient.serverUrl)
+            }
+
             // Login / Register Card Panel
             GamePanel {
                 Layout.fillWidth: true
