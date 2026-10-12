@@ -161,4 +161,85 @@ Rectangle {
             }
         }
     }
+
+    Rectangle {
+        id: opponentInfo
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.topMargin: 12
+        anchors.rightMargin: 12
+        color: Qt.rgba(0.10, 0.11, 0.14, 0.82)
+        border.color: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.28)
+        radius: Radius.lg
+        border.width: 2
+        layer.enabled: true
+        width: 305
+        height: 80
+        RowLayout {
+            anchors.fill: parent
+            GameImage {
+                // source must be changed with assetmanager
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 12
+                anchors.rightMargin: 12
+                width: 60
+                height: 60
+                source: "qrc:/GoGame/assets/playerAvatar/ayame1.png"
+            }
+
+            GameText {
+                anchors.fill: parent
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.leftMargin: 16
+                anchors.topMargin: 12
+                // text: gameManager.opponentName
+                text: "Nguoi Bi Gay Chim"
+                color: "white"
+                font.pixelSize: 20
+            }
+        }
+    }
+
+    Rectangle {
+        id: userInfo
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 12
+        anchors.leftMargin: 12
+        color: Qt.rgba(0.10, 0.11, 0.14, 0.82)
+        border.color: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.28)
+        radius: Radius.lg
+        border.width: 2
+        layer.enabled: true
+        width: 305
+        height: 80
+
+        RowLayout {
+            anchors.fill: parent
+            GameImage {
+                // source must be changed with assetmanager
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 12
+                anchors.leftMargin: 12
+                width: 60
+                height: 60
+                source: "qrc:/GoGame/assets/playerAvatar/ayame2.png"
+            }
+
+            GameText {
+                anchors.fill: parent
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.leftMargin: 86
+                anchors.topMargin: 12
+                // text: authManager.username
+                text: "Nguoi Dep Trai"
+                color: "white"
+                font.pixelSize: 20
+            }
+        }
+    }
 }

@@ -33,7 +33,6 @@ qt_add_qml_module(appGoGame
     URI GoGame
     VERSION 1.0
 
-    RESOURCES assets/fonts/genshin.ttf
     QML_FILES
         qml/Components/battle/CountdownClock.qml
         qml/Components/battle/ElementPointBar.qml
@@ -83,6 +82,10 @@ qt_add_qml_module(appGoGame
         src/Network/NetworkClient.h
         src/Network/Protocol.cpp
         src/Network/Protocol.h
+RESOURCES users.sqlite
+QML_FILES qml/Screens/SettingsScreen.qml
+QML_FILES qml/Screens/Board.qml
+RESOURCES assets/fonts/genshin.ttf assets/playerAvatar/ayame1.png assets/playerAvatar/ayame2.png assets/playerAvatar/ayame3.png assets/playerAvatar/ayame4.png assets/playerAvatar/ayame5.png assets/playerAvatar/ayame6.png assets/playerAvatar/ayame8.webp "assets/playerAvatar/eula (5).png" "assets/playerAvatar/hutao (1).jpeg" "assets/playerAvatar/hutao (1).png" "assets/playerAvatar/hutao (11).png" "assets/playerAvatar/hutao (12).png" "assets/playerAvatar/hutao (3).png" "assets/playerAvatar/kazuha (3).png" "assets/playerAvatar/kazuha (4).png" "assets/playerAvatar/kazuha (5).png" assets/playerAvatar/nahida.jpg "assets/playerAvatar/paimon (1).jpg" "assets/playerAvatar/yoimiya (1).png" "assets/playerAvatar/yoimiya (4).png" "assets/playerAvatar/yoimiya (8).png"
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

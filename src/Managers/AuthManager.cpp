@@ -144,6 +144,14 @@ bool AuthManager::registerUser(const QString &username,
     return false;
   }
 
+  if (cleanUser.length() > 17) {
+      const QString err =
+          QStringLiteral("Username must be at most 17 characters");
+      setStatusMessage(err);
+      emit registerFailed(err);
+      return false;
+  }
+
   if (password.length() < 4) {
     const QString err =
         QStringLiteral("Password must be at least 4 characters");
