@@ -56,6 +56,15 @@ GoGame/
 │   │   ├── MainMenu.qml
 │   │   └── SettingsScreen.qml
 │   └── Themes/
+├── server/
+│   ├── data/
+│   │   └── state.json
+│   ├── tests/
+│   │   └── Integration.cpp
+│   ├── CMakeLists.txt
+│   ├── README.md
+│   ├── main.cpp
+│   └── main.qml
 ├── src/
 │   ├── Core/
 │   │   ├── AI.cpp
@@ -100,6 +109,7 @@ GoGame/
 | `src/Core/`                                                    | Logic game, enum, tiện ích enum và phần khung AI.                                     |
 | `src/Managers/`                                                | Quản lý xác thực và ghép trận.                                                        |
 | `src/Models/`                                                  | Các file mô hình Board và UI.                                                         |
+| `server/` | Server WebSocket C++ độc lập, tài liệu giao thức, dữ liệu JSON và kiểm thử integration. |
 | `src/Network/`                                                 | Client mạng và giao thức trao đổi.                                                    |
 | `assets/fonts/`                                                | Font `genshin.ttf`.                                                                   |
 | `assets/sounds/`, `assets/stones/`, `qml/Themes/`, `src/Data/` | Thư mục hiện còn trống.                                                               |
@@ -109,7 +119,50 @@ GoGame/
 
 Có hai file `GamePanel.qml` ở `controls/` và `layout/`; cây thư mục giữ nguyên cả hai.
 
-### Build
+### Trạng thái hiện tại
+
+- Đã tạo server sơ khai bằng C++/Qt, chạy console độc lập với client, gửi/nhận JSON qua WebSocket và đọc/ghi file JSON.
+- Đã sửa một số lỗi component/màn hình do template: Board dùng `gameManager` và property bàn cờ cho QML; chuyển đích màn hình từ `DeckSelectScreen.qml` sang `Board.qml`; sửa URL reconnect và thêm nút kết nối lại trên màn hình đăng nhập.
+- Việc dọn template chưa hoàn tất: `MainMenu.qml` vẫn tham chiếu `deckManager`, đối tượng chưa được cung cấp từ `main.cpp`.
+
+### Server: đã có và còn thiếu
+
+| Hạng mục | Trạng thái hiện tại |
+| --- | --- |
+| Server độc lập | Đã có target `appserver`, Qt Core/Network/WebSockets, nghe `ws://127.0.0.1:14509` mặc định. |
+| Giao thức JSON | Đã có text message `{type,payload}`: `ReadData` trả `Data`, `WriteData` trả `DataWritten`; lỗi trả `Error`. |
+| Lưu trữ | Đã đọc/ghi JSON object bằng `--data-file`, tạo `{}` khi chưa có file, ghi nguyên tử bằng `QSaveFile`. Mỗi lần ghi thay toàn bộ nội dung; các client dùng chung một file. |
+| Kiểm tra dữ liệu | Đã từ chối JSON/payload sai, loại yêu cầu không hỗ trợ và binary message; giới hạn message 1 MiB. Chưa kiểm tra schema trạng thái trận hoặc luật cờ. |
+| Kết nối client | Đã tự kết nối khi khởi động, hỗ trợ `GOGAME_SERVER_URL` và reconnect. Kết nối thành công chưa có nghĩa là đăng nhập/ghép trận hoạt động. |
+| Kiểm thử | Có `server/tests/Integration.cpp` và CTest kiểm tra đọc/ghi, nhiều client, restart, dữ liệu sai và reconnect. Kết quả chạy trước được ghi trong nhật ký; lần cập nhật README này không chạy lại test. |
+| Auth và matchmaking | Chưa có xử lý đăng ký/đăng nhập, phiên người dùng, hàng chờ và ghép trận. Các yêu cầu tương ứng hiện chưa được server hỗ trợ. |
+| Đồng bộ trận đấu | Chưa tích hợp Board với `ReadData`/`WriteData`; chưa có phòng trận riêng, kiểm tra lượt/nước đi ở server hoặc cập nhật tự động tới đối thủ. |
+| Trạng thái và thời gian | Chưa thống nhất schema bàn cờ, số nước, người đến lượt, thời gian; chưa có đồng hồ do server quản lý và khôi phục phiên trận. |
+| Luật và kết thúc trận | Chưa có kiểm tra luật Trung/Nhật ở server, tính điểm, bỏ lượt, đầu hàng và kết quả trận. |
+| Replay | Chưa có lưu/xem lại tối đa 5 ván gần nhất. |
+| Triển khai ngoài local | Hiện chỉ nghe localhost; chưa có TLS, xác thực hay phân quyền truy cập dữ liệu. |
+
+Chi tiết giao thức và kiểm thử: [server/README.md](server/README.md). `server/main.qml` là file khung; server console không nạp file này.
+
+### Chạy server trong terminal riêng
+
+Từ thư mục gốc `GoGame`, mở **một terminal riêng** và chạy lần lượt:
+
+```bash
+cmake -S server -B build/server
+cmake --build build/server --parallel 3
+./build/server/appserver --data-file server/data/state.json
+```
+
+**Để terminal này chạy nguyên đó trong lúc sử dụng client.** Server chạy ở foreground; nhấn `Ctrl+C` để dừng khi không còn sử dụng. Mọi thao tác chơi còn lại thực hiện trên client, mở bằng Qt Creator hoặc terminal khác theo hướng dẫn bên dưới. Cần Qt 6.2 trở lên với Core, Network và WebSockets để build server; nếu CMake chưa tìm được Qt, thêm `-DCMAKE_PREFIX_PATH=/duong/dan/toi/Qt` vào lệnh cấu hình.
+
+Client mặc định kết nối `ws://127.0.0.1:14509`. Nếu client đã mở trước server, dùng nút **Kết nối lại server** trên màn hình đăng nhập. Có thể đặt URL khi mở client:
+
+```bash
+GOGAME_SERVER_URL=ws://127.0.0.1:14509 ./build/Desktop_Debug/appGoGame
+```
+
+### Build client
 
 Cần CMake từ 3.16, trình biên dịch C++ và Qt 6 có các module Quick/QML, Sql, Network, WebSockets. Cấu hình hiện tại yêu cầu Qt 6.2 trở lên cho Quick và Sql.
 
@@ -289,3 +342,57 @@ Viết README.md với những yêu cầu sau:
 
 Tài liệu tham khảo: https://www.studocu.vn/vn/document/dai-hoc-dien-luc/dien-luc-university/bao-cao-nhap-mon-tri-tue-nhan-tao/88382780?sid=a353be05-df77-4401-bae7-4597fba4fd601791775595
 Kết quả: tạo README.md với cấu trúc hiện tại, đủ 12 mục kế hoạch và nhật ký prompt này. Đối chiếu cây mã nguồn/tài nguyên với hệ thống file; không chạy build hoặc test vì chỉ thay đổi tài liệu.
+
+### 12/10/2026 — Sửa Board.qml để chạy local
+
+Nội dung prompt của người dùng:
+
+```text
+Sửa lại file tại tôi đang muốn fix bug Board.qml khi chạy local. Hiện tại chưa thêm server vì muốn sau này server sẽ là c++
+```
+
+Kết quả: sửa tham chiếu `gameManager` trong Board.qml, khai báo property `boardState` và thông báo cập nhật cho QML. Thêm lượt chơi local đen/trắng, hiển thị lượt hiện tại; giữ bàn cờ co theo kích thước cửa sổ và vẽ lại grid khi đổi kích thước. Mở Board trực tiếp, bỏ tự kết nối server lúc khởi động. Sửa việc duyệt nhóm quân bị ăn để tránh thay đổi vector đang duyệt. Chưa triển khai server.
+
+Kiểm tra: build thành công bằng `cmake --build build/Desktop_Debug --parallel 3`; chạy ứng dụng bằng Qt offscreen trong 3 giây không báo lỗi QML (timeout chủ động dừng ứng dụng). Bài kiểm tra C++ tạm kiểm tra property QML, 361 ô, đặt quân, đổi lượt, từ chối tọa độ ngoài bàn và ô đã có quân, ăn quân góc và chặn tự sát; tất cả đều đạt. Chưa kiểm tra thao tác chuột trực tiếp trên cửa sổ.
+
+### 12/10/2026 — Tạo server WebSocket C++ đọc/ghi JSON
+
+Nội dung prompt của người dùng:
+
+```text
+Trong file server tạo 1 websocket cơ bản đọc và ghi dữ liệu bằng file json
+```
+
+Kết quả: chuyển target `server/appserver` sang ứng dụng console C++/Qt Core, Network, WebSockets; nghe localhost cổng 14509, hỗ trợ `ReadData`/`WriteData` với envelope `{type,payload}`. Lưu JSON object vào file cấu hình bằng `--data-file`, ghi nguyên tử bằng `QSaveFile`, phản hồi lỗi khi JSON/yêu cầu/file không hợp lệ. Hướng dẫn chạy và giao thức tại [server/README.md](server/README.md). Chưa tích hợp đồng bộ Board, xác thực hoặc ghép trận.
+
+Kiểm tra: build server thành công; CTest integration đạt, kiểm tra WebSocket thực với hai client, ghi file, đọc lại sau restart, từ chối dữ liệu sai và giữ file hỏng. Kiểm tra socket chạy ngoài sandbox vì sandbox chặn mở cổng localhost.
+
+### 12/10/2026 — Sửa lỗi không kết nối server
+
+Nội dung prompt của người dùng:
+
+```text
+xử lí lỗi chính không connect được server
+```
+
+Kết quả: khôi phục kết nối WebSocket lúc client khởi động; sửa nút reconnect dùng `networkClient.serverUrl` thay cho property `Constants.serverUrl` đã bị comment. Thêm trạng thái/lỗi và nút kết nối lại trên màn hình đăng nhập. Khi kết nối lại, hủy socket cũ trước khi mở kết nối mới và xóa lỗi cũ khi kết nối thành công. Giữ địa chỉ mặc định hiện có `ws://127.0.0.1:14509`, cập nhật tài liệu dùng biến `GOGAME_SERVER_URL`.
+
+Kiểm tra: build client và server thành công; bài integration dùng chính lớp `NetworkClient` kết nối server thực, gửi/nhận JSON, báo lỗi URL sai và kết nối lại đều đạt, cùng các kiểm tra lưu JSON trước đó. Server vẫn chỉ hỗ trợ `ReadData`/`WriteData`; Auth/Matchmaking chưa được triển khai.
+
+
+### 12/10/2026 — Cập nhật README về server và component template
+
+Nội dung prompt của người dùng (chuẩn hóa xuống dòng):
+
+```text
+Viết readme.md:
+
+1. Tạo xong server sơ khai, chạy được json
+2. Fix 1 số component gây lỗi do template
+3. Thêm hướng dẫn sử dụng server như sau: Mở 1 terminal riêg chạy "cmake -S server -B build/server
+   cmake --build build/server --parallel 3
+   ./build/server/appserver --data-file server/data/state.json" và để yên đó còn lại là client.
+4. Cập nhật trạng thái của server: đã có, thiếu những gì.
+```
+
+Kết quả: cập nhật README.md hiện có, bổ sung server vào cây thư mục, ghi nhận server JSON sơ khai và các lỗi template đã sửa; thêm hướng dẫn giữ server chạy trong terminal riêng và mở client riêng. Đối chiếu mã server/client để liệt kê phần đã có và còn thiếu, bao gồm tham chiếu `deckManager` còn sót. Lần này chỉ chỉnh tài liệu; không sửa component, không chạy build hoặc test lại.

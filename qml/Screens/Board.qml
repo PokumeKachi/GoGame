@@ -10,28 +10,29 @@ Rectangle {
     implicitWidth: 1280
     implicitHeight: 720
 
+    Text {
+        anchors.top: parent.top
+        anchors.topMargin: 12
+        anchors.horizontalCenter: parent.horizontalCenter
+        text: gameManager.currentPlayer === 0 ? qsTr("Lượt quân đen") : qsTr("Lượt quân trắng")
+        font.pixelSize: 20
+    }
+
     Rectangle {
         id: board
         anchors.centerIn: parent
-        height: 608
-        width: 608
+        width: Math.max(0, Math.min(608, parent.width - 32, parent.height - 80))
+        height: width
         color: "#deb887"
         property int boardSize: 19
-        property real margin: 0
-
-        property var boardState: []
-
-        Component.onCompleted: {
-            initBoard();
-        }
-
-        function initBoard() {
-            boardState = game.board_state;
-        }
+        property real margin: 20
+        property var boardState: gameManager.boardState
 
         Canvas {
             id: gridCanvas
             anchors.fill: parent
+            onWidthChanged: requestPaint()
+            onHeightChanged: requestPaint()
             onPaint: {
                 var ctx = getContext("2d");
                 ctx.clearRect(0, 0, width, height);
@@ -61,7 +62,7 @@ Rectangle {
 
             function drawHoshi(ctx, stepX, stepY) {
                 ctx.fillStyle = "#222222";
-                var hoshiPoints = [];
+                var hoshiPoints = [3, 9, 15];
 
                 if (board.boardSize === 19) {
                     hoshiPoints = [3, 9, 15];
@@ -89,62 +90,59 @@ Rectangle {
         MouseArea {
             id: mouseArea
             anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
             onClicked: function (mouse) {
-                var usableWidth = width - (2 * boardRoot.margin);
-                var usableHeight = height - (2 * boardRoot.margin);
-                var stepX = usableWidth / (boardRoot.boardSize - 1);
-                var stepY = usableHeight / (boardRoot.boardSize - 1);
+                var usableWidth = width - (2 * board.margin);
+                var usableHeight = height - (2 * board.margin);
+                var stepX = usableWidth / (board.boardSize - 1);
+                var stepY = usableHeight / (board.boardSize - 1);
 
-                var col = Math.round((mouse.x - boardRoot.margin) / stepX);
-                var row = Math.round((mouse.y - boardRoot.margin) / stepY);
+                var col = Math.round((mouse.x - board.margin) / stepX);
+                var row = Math.round((mouse.y - board.margin) / stepY);
 
-                if (col >= 0 && col < boardRoot.boardSize && row >= 0 && row < boardRoot.boardSize) {
-                    var index = row * boardRoot.boardSize + col;
-
-                    var currentVal = boardState[index];
-                    if (currentVal === 0) {
-                        var temp = boardState.slice();
-                        temp[index] = 1;
-                        boardState = temp;
-                    }
+                if (col >= 0 && col < board.boardSize && row >= 0 && row < board.boardSize) {
+                    gameManager.update_pieces(row, col);
                 }
             }
         }
 
         Repeater {
-            model: boardRoot.boardSize * boardSize
+            model: board.boardSize * board.boardSize
+
             delegate: Item {
                 id: stoneDelegate
                 property int cellIndex: index
-                property int stateValue: boardRoot.boardState[cellIndex] !== undefined ? boardRoot.boardState[cellIndex] : 0
 
-                visible: stateValue !== 0
+                property int stateValue: board.boardState && board.boardState[cellIndex] !== undefined ? board.boardState[cellIndex] : -1
+
+                visible: stateValue !== -1
 
                 width: {
-                    let usableWidth = boardRoot.width - (2 * boardRoot.margin);
-                    return (usableWidth / (boardRoot.boardSize - 1)) * 0.9;
+                    let usableWidth = board.width - (2 * board.margin);
+                    return (usableWidth / (board.boardSize - 1)) * 0.9;
                 }
                 height: width
 
                 x: {
-                    let usableWidth = boardRoot.width - (2 * boardRoot.margin);
-                    let stepX = usableWidth / (boardRoot.boardSize - 1);
-                    let col = cellIndex % boardRoot.boardSize;
-                    return boardRoot.margin + col * stepX - width / 2;
+                    let usableWidth = board.width - (2 * board.margin);
+                    let stepX = usableWidth / (board.boardSize - 1);
+                    let col = cellIndex % board.boardSize;
+                    return board.margin + col * stepX - width / 2;
                 }
 
                 y: {
-                    let usableHeight = boardRoot.height - (2 * boardRoot.margin);
-                    let stepY = usableHeight / (boardRoot.boardSize - 1);
-                    let row = Math.floor(cellIndex / boardRoot.boardSize);
-                    return boardRoot.margin + row * stepY - height / 2;
+                    let usableHeight = board.height - (2 * board.margin);
+                    let stepY = usableHeight / (board.boardSize - 1);
+                    let row = Math.floor(cellIndex / board.boardSize);
+                    return board.margin + row * stepY - height / 2;
                 }
 
                 Rectangle {
                     anchors.fill: parent
                     radius: width / 2
-                    color: stoneDelegate.stateValue === 1 ? "#111111" : "#f0f0f0"
-                    border.color: stoneDelegate.stateValue === 1 ? "#000000" : "#cccccc"
+
+                    color: stoneDelegate.stateValue === 0 ? "#111111" : "#f0f0f0"
+                    border.color: stoneDelegate.stateValue === 0 ? "#000000" : "#cccccc"
                     border.width: 1
 
                     scale: 0.95
