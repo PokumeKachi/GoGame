@@ -258,6 +258,14 @@ void Game::update_pieces(int x, int y)
     emit pieces_updated();
 }
 
+void Game::pass_turn()
+{
+    // A pass is a turn, so an immediate-ko restriction no longer applies.
+    m_ko_square = -1;
+    m_currentPlayer = 1 - m_currentPlayer;
+    emit currentPlayerChanged();
+}
+
 
 void Game::setMatchInfo(const QString& matchId, int playerIndex, const QString& opponentName) {
 

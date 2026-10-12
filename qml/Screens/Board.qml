@@ -10,12 +10,23 @@ Rectangle {
     implicitWidth: 1280
     implicitHeight: 720
 
-    Text {
+    Row {
         anchors.top: parent.top
         anchors.topMargin: 12
         anchors.horizontalCenter: parent.horizontalCenter
-        text: gameManager.currentPlayer === 0 ? qsTr("Lượt quân đen") : qsTr("Lượt quân trắng")
-        font.pixelSize: 20
+        spacing: 12
+
+        Text {
+            text: gameManager.currentPlayer === 0
+                  ? qsTr("Black to play")
+                  : qsTr("White to play")
+            font.pixelSize: 20
+        }
+
+        Button {
+            text: qsTr("Pass")
+            onClicked: gameManager.pass_turn()
+        }
     }
 
     Rectangle {

@@ -372,3 +372,23 @@ relovse confict of github push
 Kết quả: hợp nhất `origin/main` vào `main`, giữ lịch sử hai nhánh và sửa conflict trong `server/main.cpp`, `src/Network/NetworkClient.cpp`. Hai phiên bản chỉ khác định dạng khoảng trắng; giữ định dạng local, nhận các thay đổi remote về cấu hình build, tài liệu và test.
 
 Kiểm tra merge: build client `build/Desktop_Debug` và build server sạch `build/merge-check-server` thành công; CTest integration đạt 1/1. Build server trong thư mục cũ gặp cache AUTOMOC lỗi thời; build sạch xác nhận mã hợp nhất hoạt động.
+
+### 12/10/2026 — Implement `gameManager.passTurn`
+
+Nội dung prompt của người dùng:
+
+```text
+implement gameManager.passTurn
+```
+
+Kết quả: thêm `Q_INVOKABLE void Game::passTurn()` để QML có thể gọi `gameManager.passTurn()`. Hàm chuyển lượt sang người chơi còn lại, xóa hạn chế ko ngay lập tức vì một lượt bỏ qua đã diễn ra, và phát `currentPlayerChanged` để giao diện cập nhật. Không thay đổi trạng thái bàn cờ. Build client được kiểm tra bằng `cmake --build build/local --parallel 3` và hoàn tất thành công.
+
+### 12/10/2026 — Append AI prompt log to README
+
+Nội dung prompt của người dùng:
+
+```text
+and append to the README.md, follow the AI guidelines
+```
+
+Kết quả: bổ sung đầy đủ hai prompt của phiên làm việc này, ngày thực hiện và kết quả vào nhật ký AI trong README.md theo quy ước của dự án.
