@@ -260,9 +260,93 @@ void Game::update_pieces(int x, int y)
 
 
 void Game::setMatchInfo(const QString& matchId, int playerIndex, const QString& opponentName) {
-
+    if (playerIndex != 0 && playerIndex != 1)
+        return;
+    if (m_matchId == matchId && m_playerIndex == playerIndex && m_opponentName == opponentName)
+        return;
+    m_matchId = matchId;
+    m_playerIndex = playerIndex;
+    m_opponentName = opponentName;
+    emit matchInfoChanged();
 }
 
 void Game::handleServerMessage(const QJsonObject& message) {
+    const QString type = Protocol::readMessageType(message);
+    const QJsonObject payload = Protocol::readPayload(message);
 
+    if (type == "MatchFound") {
+        return;
+    }
+
+    if (type == "GameSnapshot") {
+        const QString matchId = payload.value("matchId").toString();
+
+        if (!matchId.isEmpty() && matchId != m_matchId) {
+            return;
+        }
+
+        const QString stage = payload.value("stage").toString();
+        setStage(EnumUtils::gameStageFromString(stage));
+        m_snapshot = payload.toVariantMap();
+        emit snapshotChanged();
+
+        emit gameSnapshotReceived(payload);
+        return;
+    }
+
+    if (type == "GameEvent") {
+        const QString matchId = payload.value("matchId").toString();
+
+        if (!matchId.isEmpty() && matchId != m_matchId) {
+            return;
+        }
+
+        const QJsonArray events = payload.value("events").toArray();
+
+        for (const QJsonValue &value : events) {
+            const QJsonObject event = value.toObject();
+            const QString eventType = event.value("eventType").toString();
+
+            if (eventType == "StageChanged") {
+                const QString nextStage = event.value("stage").toString();
+                setStage(EnumUtils::gameStageFromString(nextStage));
+            }
+
+            if (eventType == "GameEnded") {
+                emit gameEnded(event.value("reason").toString());
+            }
+        }
+
+        emit gameEventsReceived(events);
+        return;
+    }
+
+    if (type == "Error") {
+        emit gameError(payload.value("message").toString());
+    }
 }
+
+
+void Game::setStage(GameStage stage) {
+    if (m_stage == stage) {
+        return;
+    }
+
+    m_stage = stage;
+    emit stageChanged();
+}
+
+void Game::sendCommand(const QJsonObject &command) {
+    if (!m_networkClient) {
+        emit gameError(QStringLiteral("Network client is not ready"));
+        return;
+    }
+
+    if (!m_networkClient->isConnected()) {
+        emit gameError(QStringLiteral("Not connected to server"));
+        return;
+    }
+
+    m_networkClient->sendMessage(command);
+}
+

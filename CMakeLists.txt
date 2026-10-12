@@ -29,6 +29,7 @@ qt_add_qml_module(appGoGame
     VERSION 1.0
 
     QML_FILES
+        qml/Components/battle/PlayerPanel.qml
         qml/Components/battle/CountdownClock.qml
         qml/Components/battle/ElementPointBar.qml
         qml/Components/cards/Card.qml
@@ -54,7 +55,7 @@ qt_add_qml_module(appGoGame
         qml/Screens/MainMenu.qml
         main.qml
 SOURCES src/Core/AI.cpp src/Core/AI.h src/Core/Game.cpp src/Core/Game.h src/Managers/AuthManager.cpp src/Managers/AuthManager.h src/Models/Board.cpp src/Models/Board.h src/Models/UI.cpp src/Models/UI.h src/Network/NetworkClient.cpp src/Network/NetworkClient.h src/Network/Protocol.cpp src/Network/Protocol.h main.cpp
-RESOURCES users.sqlite
+RESOURCES users.sqlite assets/background/background1.png
 SOURCES src/Core/Enums.h
 SOURCES src/Core/Enumutils.h src/Core/Enumutils.cpp
 SOURCES src/Managers/MatchmakingManager.h src/Managers/MatchmakingManager.cpp
