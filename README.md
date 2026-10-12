@@ -359,3 +359,16 @@ Viết readme.md:
 ```
 
 Kết quả: cập nhật README.md hiện có, bổ sung server vào cây thư mục, ghi nhận server JSON sơ khai và các lỗi template đã sửa; thêm hướng dẫn giữ server chạy trong terminal riêng và mở client riêng. Đối chiếu mã server/client để liệt kê phần đã có và còn thiếu, bao gồm tham chiếu `deckManager` còn sót. Lần này chỉ chỉnh tài liệu; không sửa component, không chạy build hoặc test lại.
+
+
+### 12/10/2026 — Resolve GitHub push conflict
+
+Nội dung prompt của người dùng:
+
+```text
+relovse confict of github push
+```
+
+Kết quả: hợp nhất `origin/main` vào `main`, giữ lịch sử hai nhánh và sửa conflict trong `server/main.cpp`, `src/Network/NetworkClient.cpp`. Hai phiên bản chỉ khác định dạng khoảng trắng; giữ định dạng local, nhận các thay đổi remote về cấu hình build, tài liệu và test.
+
+Kiểm tra merge: build client `build/Desktop_Debug` và build server sạch `build/merge-check-server` thành công; CTest integration đạt 1/1. Build server trong thư mục cũ gặp cache AUTOMOC lỗi thời; build sạch xác nhận mã hợp nhất hoạt động.

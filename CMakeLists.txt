@@ -88,3 +88,4 @@ include(GNUInstallDirs)
 install(TARGETS appGoGame
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+add_subdirectory(server)
