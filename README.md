@@ -90,22 +90,22 @@ GoGame/
 └── users.sqlite
 ```
 
-| Đường dẫn | Vai trò |
-| --- | --- |
-| `CMakeLists.txt` | Cấu hình executable `appGoGame`, module QML `GoGame` và tài nguyên. |
-| `main.cpp`, `main.qml` | Khởi tạo ứng dụng và giao diện gốc. |
-| `qml/Screens/` | Các màn hình đăng nhập, menu chính, cài đặt và bàn đấu. |
-| `qml/Core/` | Quản lý màn hình, theme, font, khoảng cách, bo góc, chuyển động và hằng số. |
-| `qml/Components/` | Các thành phần giao diện dùng lại, chia theo battle, cards, common, controls, layout. |
-| `src/Core/` | Logic game, enum, tiện ích enum và phần khung AI. |
-| `src/Managers/` | Quản lý xác thực và ghép trận. |
-| `src/Models/` | Các file mô hình Board và UI. |
-| `src/Network/` | Client mạng và giao thức trao đổi. |
-| `assets/fonts/` | Font `genshin.ttf`. |
-| `assets/sounds/`, `assets/stones/`, `qml/Themes/`, `src/Data/` | Thư mục hiện còn trống. |
-| `users.sqlite` | File SQLite hiện có, dung lượng 0 byte tại thời điểm kiểm tra. |
-| `.agents/`, `.aws/`, `.codex/` | Thư mục môi trường hiện có, đang trống. |
-| `build/`, `.qtcreator/`, `.git/` | Dữ liệu build, IDE và Git; không phải mã nguồn tính năng. |
+| Đường dẫn                                                      | Vai trò                                                                               |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `CMakeLists.txt`                                               | Cấu hình executable `appGoGame`, module QML `GoGame` và tài nguyên.                   |
+| `main.cpp`, `main.qml`                                         | Khởi tạo ứng dụng và giao diện gốc.                                                   |
+| `qml/Screens/`                                                 | Các màn hình đăng nhập, menu chính, cài đặt và bàn đấu.                               |
+| `qml/Core/`                                                    | Quản lý màn hình, theme, font, khoảng cách, bo góc, chuyển động và hằng số.           |
+| `qml/Components/`                                              | Các thành phần giao diện dùng lại, chia theo battle, cards, common, controls, layout. |
+| `src/Core/`                                                    | Logic game, enum, tiện ích enum và phần khung AI.                                     |
+| `src/Managers/`                                                | Quản lý xác thực và ghép trận.                                                        |
+| `src/Models/`                                                  | Các file mô hình Board và UI.                                                         |
+| `src/Network/`                                                 | Client mạng và giao thức trao đổi.                                                    |
+| `assets/fonts/`                                                | Font `genshin.ttf`.                                                                   |
+| `assets/sounds/`, `assets/stones/`, `qml/Themes/`, `src/Data/` | Thư mục hiện còn trống.                                                               |
+| `users.sqlite`                                                 | File SQLite hiện có, dung lượng 0 byte tại thời điểm kiểm tra.                        |
+| `.agents/`, `.aws/`, `.codex/`                                 | Thư mục môi trường hiện có, đang trống.                                               |
+| `build/`, `.qtcreator/`, `.git/`                               | Dữ liệu build, IDE và Git; không phải mã nguồn tính năng.                             |
 
 Có hai file `GamePanel.qml` ở `controls/` và `layout/`; cây thư mục giữ nguyên cả hai.
 
@@ -180,11 +180,11 @@ Thay đường dẫn Qt theo máy; với bộ sinh đa cấu hình, đường d�
 
 ### 11. AI đấu với máy
 
-| Độ khó | Dự định |
-| --- | --- |
-| Dễ | Minimax suy nghĩ nông, tính trước 1–2 nước. |
-| Trung bình | Minimax; độ sâu và ngân sách tính toán sẽ xác định khi thử nghiệm. |
-| Khó | Alpha-Beta Pruning kết hợp MCTS để tối ưu; hướng tới dùng mạng 6-block ONNX trên CPU. |
+| Độ khó     | Dự định                                                                               |
+| ---------- | ------------------------------------------------------------------------------------- |
+| Dễ         | Minimax suy nghĩ nông, tính trước 1–2 nước.                                           |
+| Trung bình | Minimax; độ sâu và ngân sách tính toán sẽ xác định khi thử nghiệm.                    |
+| Khó        | Alpha-Beta Pruning kết hợp MCTS để tối ưu; hướng tới dùng mạng 6-block ONNX trên CPU. |
 
 - [ ] Đo số phép tính và thời gian trên máy thực tế để mỗi nước AI không tốn quá 1–2 giây.
 - [ ] Giới hạn song song tối đa 3 luồng CPU. Ý tưởng ban đầu dùng `ParallelOptions { MaxDegreeOfParallelism = 3 }`; đây là cú pháp C#, khi triển khai trong dự án C++/Qt cần cơ chế tương đương.
@@ -242,7 +242,7 @@ Theo yêu cầu của chủ dự án, từ đây mỗi lần AI xử lý prompt 
 
 Nội dung prompt của người dùng (chuẩn hóa khoảng trắng và xuống dòng từ định dạng tin nhắn):
 
-````text
+```text
 Viết README.md với những yêu cầu sau:
 
 1. Đầy đủ cấu trục file hiện tại
@@ -285,6 +285,7 @@ Viết README.md với những yêu cầu sau:
 12. Build cái mạng neuron 6b =)))
 
 3) Khai báo AI: Hãy viết tất cả những gì tôi đã prompt cho bạn của dự án này kể cả hiện tại và sau này vô đây
-````
+```
 
+Tài liệu tham khảo: https://www.studocu.vn/vn/document/dai-hoc-dien-luc/dien-luc-university/bao-cao-nhap-mon-tri-tue-nhan-tao/88382780?sid=a353be05-df77-4401-bae7-4597fba4fd601791775595
 Kết quả: tạo README.md với cấu trúc hiện tại, đủ 12 mục kế hoạch và nhật ký prompt này. Đối chiếu cây mã nguồn/tài nguyên với hệ thống file; không chạy build hoặc test vì chỉ thay đổi tài liệu.
