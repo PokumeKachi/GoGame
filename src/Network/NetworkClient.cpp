@@ -8,7 +8,7 @@ NetworkClient::NetworkClient(QObject *parent)
     : QObject(parent),
       m_serverUrl(qEnvironmentVariable(
                       "LUMIETCG_SERVER_URL",
-                      QStringLiteral("wss://lumietcgserver.onrender.com/ws"))
+                      QStringLiteral("wss://127.0.0.1:14509"))
                       .trimmed()) {
   connect(&m_socket, &QWebSocket::connected, this,
           &NetworkClient::handleConnected);

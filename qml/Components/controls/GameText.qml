@@ -1,5 +1,5 @@
 import QtQuick
-import lumieTcg
+import GoGame
 
 Text {
     id: root
@@ -12,7 +12,7 @@ Text {
         Caption
     }
 
-    property int type: GameText.Type.Body
+    property int type: GameText.Body
 
     font.family: Typography.family
     color: Theme.text
@@ -23,15 +23,15 @@ Text {
         if (!Typography) return 16;
 
         switch(type) {
-        case GameText.Type.Display:
+        case GameText.Display:
             return Typography.display
-        case GameText.Type.Title:
+        case GameText.Title:
             return Typography.title
-        case GameText.Type.Heading:
+        case GameText.Heading:
             return Typography.heading
-        case GameText.Type.Body:
+        case GameText.Body:
             return Typography.body
-        case GameText.Type.Caption:
+        case GameText.Caption:
             return Typography.caption
         default:
             return Typography.body

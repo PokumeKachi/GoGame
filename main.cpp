@@ -60,16 +60,15 @@ int main(int argc, char *argv[])
         );
 
     QQmlApplicationEngine engine;
-    // engine.addImportPath(QStringLiteral("qrc:/"));
-    // engine.rootContext()->setContextProperty("networkClient", &networkClient);
-    // engine.rootContext()->setContextProperty("matchmakingManager", &matchmakingManager);
-    // engine.rootContext()->setContextProperty("gameManager", &game);
-    // engine.rootContext()->setContextProperty("authManager", &authManager);
+    engine.addImportPath(QStringLiteral("qrc:/"));
+    engine.rootContext()->setContextProperty("networkClient", &networkClient);
+    engine.rootContext()->setContextProperty("matchmakingManager", &matchmakingManager);
+    engine.rootContext()->setContextProperty("gameManager", &game);
+    engine.rootContext()->setContextProperty("authManager", &authManager);
 
-    // networkClient.connectToServer(networkClient.serverUrl());
+    networkClient.connectToServer(networkClient.serverUrl());
 
-    // DO NOT MOVE/REMOVE
-    engine.loadFromModule("GoGame", "App");
+    engine.load(QUrl(QStringLiteral("qrc:/GoGame/main.qml")));
 
 
     if (engine.rootObjects().isEmpty()) {

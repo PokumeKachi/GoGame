@@ -15,7 +15,7 @@ Rectangle {
 
         property bool isRegisterMode: false
 
-        // Background Gradient
+        // Gradient
         Rectangle {
             anchors.fill: parent
             gradient: Gradient {
@@ -34,7 +34,7 @@ Rectangle {
             }
         }
 
-        // Ambient Decorative Glow
+        // Ambient Glow
         Rectangle {
             width: 480
             height: 480
@@ -50,13 +50,13 @@ Rectangle {
             spacing: Spacing.xl
             width: 480
 
-            // Title Block
+            // Title
             ColumnLayout {
                 Layout.alignment: Qt.AlignHCenter
                 spacing: Spacing.xs
 
                 GameText {
-                    text: "✦ LUMIE TCG ✦"
+                    text: "✦ Go Game ✦"
                     type: GameText.Display
                     color: "white"
                     font.bold: true
@@ -64,7 +64,7 @@ Rectangle {
                 }
 
                 GameText {
-                    text: "Genius Invokation Re-imagined"
+                    text: "Wanna be a Go master? You choose the wrong place"
                     type: GameText.Caption
                     color: "white"
                     font.italic: true
@@ -91,7 +91,6 @@ Rectangle {
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    // Username Input Field
                     ColumnLayout {
                         Layout.fillWidth: true
                         spacing: Spacing.xxs
@@ -131,7 +130,6 @@ Rectangle {
                         }
                     }
 
-                    // Password Input Field
                     ColumnLayout {
                         Layout.fillWidth: true
                         spacing: Spacing.xxs

@@ -5,7 +5,7 @@ import QtQuick
 QtObject {
     readonly property FontLoader genshinFont: FontLoader {
         id: genshin
-        source: "/lumieTcg/assets/fonts/genshin.ttf"
+        source: "../../assets/fonts/genshin.ttf"
     }
 
     readonly property string family: genshin.name

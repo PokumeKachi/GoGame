@@ -1,5 +1,5 @@
 import QtQuick
-import lumieTcg
+import GoGame
 
 Rectangle {
     id: root

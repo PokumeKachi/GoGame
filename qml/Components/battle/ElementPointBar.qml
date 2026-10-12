@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import "../controls"
-import lumieTcg
+import GoGame
 
 GamePanel {
     id: root

@@ -59,6 +59,8 @@ RESOURCES users.sqlite
 SOURCES src/Core/Enums.h
 SOURCES src/Core/Enumutils.h src/Core/Enumutils.cpp
 SOURCES src/Managers/MatchmakingManager.h src/Managers/MatchmakingManager.cpp
+QML_FILES qml/Screens/SettingsScreen.qml
+QML_FILES qml/Screens/Board.qml
 
 
 )
