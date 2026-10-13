@@ -43,6 +43,7 @@ public:
     std::vector<std::vector<int>> board_state();
     Q_INVOKABLE bool is_valid_move(int x, int y);
     Q_INVOKABLE void update_pieces(int x, int y);
+    Q_INVOKABLE void pass_turn();
 
     void setStage(GameStage stage);
     void sendCommand(const QJsonObject &command);

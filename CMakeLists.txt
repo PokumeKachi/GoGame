@@ -8,6 +8,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 6.2 COMPONENTS Quick Sql REQUIRED)
 find_package(Qt6 6.2 COMPONENTS Quick REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS WebSockets)
+find_package(Qt6 REQUIRED COMPONENTS
+    Core
+    Gui
+    Multimedia
+)
 
 qt_add_executable(appGoGame
     main.cpp
@@ -44,6 +49,8 @@ qt_add_qml_module(appGoGame
         qml/Components/controls/GameText.qml
         qml/Components/layout/GameBackground.qml
         qml/Components/layout/GamePanel.qml
+        qml/Screens/SettingsScreen.qml
+        qml/Screens/Board.qml
         qml/Core/Constants.qml
         qml/Core/Motion.qml
         qml/Core/Radius.qml
@@ -75,9 +82,15 @@ set_target_properties(appGoGame PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
+target_include_directories(appGoGame PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/Managers"
+)
+
 target_link_libraries(appGoGame
     PRIVATE
         Qt6::Core
+        Qt6::Gui
+        Qt6::Multimedia
         Qt6::Quick
         Qt6::Qml
         Qt6::Network

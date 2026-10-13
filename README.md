@@ -77,6 +77,8 @@ GoGame/
 │   │   └── Game.h
 │   ├── Data/
 │   ├── Managers/
+│   │   ├── AssetManager.cpp
+│   │   ├── AssetManager.h
 │   │   ├── AuthManager.cpp
 │   │   ├── AuthManager.h
 │   │   ├── MatchmakingManager.cpp
@@ -376,11 +378,30 @@ Kết quả: hợp nhất `origin/main` vào `main`, giữ lịch sử hai nhán
 
 Kiểm tra merge: build client `build/Desktop_Debug` và build server sạch `build/merge-check-server` thành công; CTest integration đạt 1/1. Build server trong thư mục cũ gặp cache AUTOMOC lỗi thời; build sạch xác nhận mã hợp nhất hoạt động.
 
+### 12/10/2026 — Implement `gameManager.pass_turn`
 ### 12/10/2026 — Cập nhật tiến độ đồng hồ, báo lỗi và layout bàn cờ
 
 Nội dung prompt của người dùng:
 
 ```text
+implement gameManager.pass_turn
+```
+
+Kết quả: thêm `Q_INVOKABLE void Game::pass_turn()` để QML có thể gọi `gameManager.pass_turn()`. Hàm chuyển lượt sang người chơi còn lại, xóa hạn chế ko ngay lập tức vì một lượt bỏ qua đã diễn ra, và phát `currentPlayerChanged` để giao diện cập nhật. Không thay đổi trạng thái bàn cờ. Build client được kiểm tra bằng `cmake --build build/local --parallel 3` và hoàn tất thành công.
+
+### 12/10/2026 — Append AI prompt log to README
+
+Nội dung prompt của người dùng:
+
+```text
+and append to the README.md, follow the AI guidelines
+```
+
+Kết quả: bổ sung đầy đủ hai prompt của phiên làm việc này, ngày thực hiện và kết quả vào nhật ký AI trong README.md theo quy ước của dự án.
+
+### 12/10/2026 — Implement `AssetsManager.cpp`
+
+Nội dung prompt của người dùng:
 Cập nhật README. Đồng thời note những thứ này để sau này tôi làm:
 
 1. Phần đồng hồ đếm ngược đã xong logic nhưng cần handle từ server và có thể thêm đồng hồ của đối thủ -> đã đến bước làm server.

@@ -98,6 +98,7 @@ Rectangle {
     implicitWidth: 1280
     implicitHeight: 720
 
+    Row {
     Image {
         anchors.fill: parent
         source: "qrc:/GoGame/assets/background/background1.png"
@@ -107,6 +108,18 @@ Rectangle {
     ColumnLayout {
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
+        spacing: 12
+
+        Text {
+            text: gameManager.currentPlayer === 0
+                  ? qsTr("Black to play")
+                  : qsTr("White to play")
+            font.pixelSize: 20
+        }
+
+        Button {
+            text: qsTr("Pass")
+            onClicked: gameManager.pass_turn()
         Text {
             anchors.top: parent.top
             anchors.topMargin: 12
