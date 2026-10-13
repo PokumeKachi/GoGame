@@ -101,23 +101,23 @@ GoGame/
 └── users.sqlite
 ```
 
-| Đường dẫn                                                      | Vai trò                                                                               |
-| -------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `CMakeLists.txt`                                               | Cấu hình executable `appGoGame`, module QML `GoGame` và tài nguyên.                   |
-| `main.cpp`, `main.qml`                                         | Khởi tạo ứng dụng và giao diện gốc.                                                   |
-| `qml/Screens/`                                                 | Các màn hình đăng nhập, menu chính, cài đặt và bàn đấu.                               |
-| `qml/Core/`                                                    | Quản lý màn hình, theme, font, khoảng cách, bo góc, chuyển động và hằng số.           |
-| `qml/Components/`                                              | Các thành phần giao diện dùng lại, chia theo battle, cards, common, controls, layout. |
-| `src/Core/`                                                    | Logic game, enum, tiện ích enum và phần khung AI.                                     |
-| `src/Managers/`                                                | Quản lý xác thực và ghép trận.                                                        |
-| `src/Models/`                                                  | Các file mô hình Board và UI.                                                         |
-| `server/` | Server WebSocket C++ độc lập, tài liệu giao thức, dữ liệu JSON và kiểm thử integration. |
-| `src/Network/`                                                 | Client mạng và giao thức trao đổi.                                                    |
-| `assets/fonts/`                                                | Font `genshin.ttf`.                                                                   |
-| `assets/sounds/`, `assets/stones/`, `qml/Themes/`, `src/Data/` | Thư mục hiện còn trống.                                                               |
-| `users.sqlite`                                                 | File SQLite hiện có, dung lượng 0 byte tại thời điểm kiểm tra.                        |
-| `.agents/`, `.aws/`, `.codex/`                                 | Thư mục môi trường hiện có, đang trống.                                               |
-| `build/`, `.qtcreator/`, `.git/`                               | Dữ liệu build, IDE và Git; không phải mã nguồn tính năng.                             |
+| Đường dẫn                                                      | Vai trò                                                                                 |
+| -------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `CMakeLists.txt`                                               | Cấu hình executable `appGoGame`, module QML `GoGame` và tài nguyên.                     |
+| `main.cpp`, `main.qml`                                         | Khởi tạo ứng dụng và giao diện gốc.                                                     |
+| `qml/Screens/`                                                 | Các màn hình đăng nhập, menu chính, cài đặt và bàn đấu.                                 |
+| `qml/Core/`                                                    | Quản lý màn hình, theme, font, khoảng cách, bo góc, chuyển động và hằng số.             |
+| `qml/Components/`                                              | Các thành phần giao diện dùng lại, chia theo battle, cards, common, controls, layout.   |
+| `src/Core/`                                                    | Logic game, enum, tiện ích enum và phần khung AI.                                       |
+| `src/Managers/`                                                | Quản lý xác thực và ghép trận.                                                          |
+| `src/Models/`                                                  | Các file mô hình Board và UI.                                                           |
+| `server/`                                                      | Server WebSocket C++ độc lập, tài liệu giao thức, dữ liệu JSON và kiểm thử integration. |
+| `src/Network/`                                                 | Client mạng và giao thức trao đổi.                                                      |
+| `assets/fonts/`                                                | Font `genshin.ttf`.                                                                     |
+| `assets/sounds/`, `assets/stones/`, `qml/Themes/`, `src/Data/` | Thư mục hiện còn trống.                                                                 |
+| `users.sqlite`                                                 | File SQLite hiện có, dung lượng 0 byte tại thời điểm kiểm tra.                          |
+| `.agents/`, `.aws/`, `.codex/`                                 | Thư mục môi trường hiện có, đang trống.                                                 |
+| `build/`, `.qtcreator/`, `.git/`                               | Dữ liệu build, IDE và Git; không phải mã nguồn tính năng.                               |
 
 Có hai file `GamePanel.qml` ở `controls/` và `layout/`; cây thư mục giữ nguyên cả hai.
 
@@ -125,24 +125,26 @@ Có hai file `GamePanel.qml` ở `controls/` và `layout/`; cây thư mục gi�
 
 - Đã tạo server sơ khai bằng C++/Qt, chạy console độc lập với client, gửi/nhận JSON qua WebSocket và đọc/ghi file JSON.
 - Đã sửa một số lỗi component/màn hình do template: Board dùng `gameManager` và property bàn cờ cho QML; chuyển đích màn hình từ `DeckSelectScreen.qml` sang `Board.qml`; sửa URL reconnect và thêm nút kết nối lại trên màn hình đăng nhập.
+- Theo cập nhật của chủ dự án: logic đồng hồ đếm ngược đã xong; bước tiếp theo là xử lý và đồng bộ thời gian từ server, có thể bổ sung đồng hồ của đối thủ.
+- Phản hồi vị trí đặt sai đã hoàn thành, chỉ còn thiếu âm thanh báo lỗi.
 - Việc dọn template chưa hoàn tất: `MainMenu.qml` vẫn tham chiếu `deckManager`, đối tượng chưa được cung cấp từ `main.cpp`.
 
 ### Server: đã có và còn thiếu
 
-| Hạng mục | Trạng thái hiện tại |
-| --- | --- |
-| Server độc lập | Đã có target `appserver`, Qt Core/Network/WebSockets, nghe `ws://127.0.0.1:14509` mặc định. |
-| Giao thức JSON | Đã có text message `{type,payload}`: `ReadData` trả `Data`, `WriteData` trả `DataWritten`; lỗi trả `Error`. |
-| Lưu trữ | Đã đọc/ghi JSON object bằng `--data-file`, tạo `{}` khi chưa có file, ghi nguyên tử bằng `QSaveFile`. Mỗi lần ghi thay toàn bộ nội dung; các client dùng chung một file. |
-| Kiểm tra dữ liệu | Đã từ chối JSON/payload sai, loại yêu cầu không hỗ trợ và binary message; giới hạn message 1 MiB. Chưa kiểm tra schema trạng thái trận hoặc luật cờ. |
-| Kết nối client | Đã tự kết nối khi khởi động, hỗ trợ `GOGAME_SERVER_URL` và reconnect. Kết nối thành công chưa có nghĩa là đăng nhập/ghép trận hoạt động. |
-| Kiểm thử | Có `server/tests/Integration.cpp` và CTest kiểm tra đọc/ghi, nhiều client, restart, dữ liệu sai và reconnect. Kết quả chạy trước được ghi trong nhật ký; lần cập nhật README này không chạy lại test. |
-| Auth và matchmaking | Chưa có xử lý đăng ký/đăng nhập, phiên người dùng, hàng chờ và ghép trận. Các yêu cầu tương ứng hiện chưa được server hỗ trợ. |
-| Đồng bộ trận đấu | Chưa tích hợp Board với `ReadData`/`WriteData`; chưa có phòng trận riêng, kiểm tra lượt/nước đi ở server hoặc cập nhật tự động tới đối thủ. |
-| Trạng thái và thời gian | Chưa thống nhất schema bàn cờ, số nước, người đến lượt, thời gian; chưa có đồng hồ do server quản lý và khôi phục phiên trận. |
-| Luật và kết thúc trận | Chưa có kiểm tra luật Trung/Nhật ở server, tính điểm, bỏ lượt, đầu hàng và kết quả trận. |
-| Replay | Chưa có lưu/xem lại tối đa 5 ván gần nhất. |
-| Triển khai ngoài local | Hiện chỉ nghe localhost; chưa có TLS, xác thực hay phân quyền truy cập dữ liệu. |
+| Hạng mục                | Trạng thái hiện tại                                                                                                                                                                                                                |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Server độc lập          | Đã có target `appserver`, Qt Core/Network/WebSockets, nghe `ws://127.0.0.1:14509` mặc định.                                                                                                                                        |
+| Giao thức JSON          | Đã có text message `{type,payload}`: `ReadData` trả `Data`, `WriteData` trả `DataWritten`; lỗi trả `Error`.                                                                                                                        |
+| Lưu trữ                 | Đã đọc/ghi JSON object bằng `--data-file`, tạo `{}` khi chưa có file, ghi nguyên tử bằng `QSaveFile`. Mỗi lần ghi thay toàn bộ nội dung; các client dùng chung một file.                                                           |
+| Kiểm tra dữ liệu        | Đã từ chối JSON/payload sai, loại yêu cầu không hỗ trợ và binary message; giới hạn message 1 MiB. Chưa kiểm tra schema trạng thái trận hoặc luật cờ.                                                                               |
+| Kết nối client          | Đã tự kết nối khi khởi động, hỗ trợ `GOGAME_SERVER_URL` và reconnect. Kết nối thành công chưa có nghĩa là đăng nhập/ghép trận hoạt động.                                                                                           |
+| Kiểm thử                | Có `server/tests/Integration.cpp` và CTest kiểm tra đọc/ghi, nhiều client, restart, dữ liệu sai và reconnect. Kết quả chạy trước được ghi trong nhật ký; lần cập nhật README này không chạy lại test.                              |
+| Auth và matchmaking     | Chưa có xử lý đăng ký/đăng nhập, phiên người dùng, hàng chờ và ghép trận. Các yêu cầu tương ứng hiện chưa được server hỗ trợ.                                                                                                      |
+| Đồng bộ trận đấu        | Chưa tích hợp Board với `ReadData`/`WriteData`; chưa có phòng trận riêng, kiểm tra lượt/nước đi ở server hoặc cập nhật tự động tới đối thủ.                                                                                        |
+| Trạng thái và thời gian | Logic đồng hồ đếm ngược phía client đã xong; đã đến bước làm server xử lý và đồng bộ thời gian. Chưa có đồng hồ do server quản lý và khôi phục phiên trận; cần thống nhất schema trạng thái trận. Có thể thêm đồng hồ của đối thủ. |
+| Luật và kết thúc trận   | Chưa có kiểm tra luật Trung/Nhật ở server, tính điểm, bỏ lượt, đầu hàng và kết quả trận.                                                                                                                                           |
+| Replay                  | Chưa có lưu/xem lại tối đa 5 ván gần nhất.                                                                                                                                                                                         |
+| Triển khai ngoài local  | Hiện chỉ nghe localhost; chưa có TLS, xác thực hay phân quyền truy cập dữ liệu.                                                                                                                                                    |
 
 Chi tiết giao thức và kiểm thử: [server/README.md](server/README.md). `server/main.qml` là file khung; server console không nạp file này.
 
@@ -181,21 +183,23 @@ Thay đường dẫn Qt theo máy; với bộ sinh đa cấu hình, đường d�
 ### 1. Hoàn thiện Board.qml trước
 
 - [ ] Ưu tiên `qml/Screens/Board.qml`.
-- [ ] Hoàn thiện UI bàn đấu: ô hiện tên người chơi, avatar và đồng hồ đếm ngược.
+- [x] Hoàn thiện UI bàn đấu: ô hiện tên người chơi và avatar.
+- [x] Hoàn thành logic đồng hồ đếm ngược phía client.
+- [ ] **Bước tiếp theo: làm server xử lý và đồng bộ thời gian đồng hồ.**
+- [ ] Có thể bổ sung đồng hồ của đối thủ.
+- [ ] Cân nhắc thu nhỏ layout bàn cờ để có thêm không gian cho chế độ chơi; đây là ý tưởng có thể làm sau.
 
 ### 2. Đặt quân bằng hai lần nhấn
 
-- [ ] Lần đầu tại vị trí hợp lệ: chỉ hiện quân cờ mờ, nhấp nháy (preview).
-- [ ] Lần thứ hai tại cùng vị trí: xác nhận đặt quân.
+- [x] Lần đầu tại vị trí hợp lệ: chỉ hiện quân cờ mờ, nhấp nháy (preview).
+- [x] Lần thứ hai tại cùng vị trí: xác nhận đặt quân.
 - [ ] Cho phép bật/tắt chế độ này trong settings.
 
 ### 3. Phản hồi khi đặt sai vị trí
 
-- [ ] Hiện chữ báo lỗi ở trên cùng màn hình.
-- [ ] Không cho đặt quân, kể cả preview, ở vị trí không hợp lệ.
-- [ ] Khoanh đỏ vị trí lỗi trong 0,5–1 giây.
-- [ ] Khi triển khai, **thêm comment rõ ràng ngay đoạn xử lý khoanh đỏ và thời gian hiển thị** để dễ tìm, chỉnh và sửa lỗi.
-- [ ] Phát âm thanh báo lỗi.
+- [x] Hiện chữ báo lỗi ở trên cùng màn hình.
+- [x] Không cho đặt quân, kể cả preview, ở vị trí không hợp lệ.
+- [ ] Phát âm thanh báo lỗi — phần còn thiếu duy nhất của phản hồi vị trí sai.
 
 ### 4. Luật Trung / Nhật
 
@@ -362,7 +366,6 @@ Viết readme.md:
 
 Kết quả: cập nhật README.md hiện có, bổ sung server vào cây thư mục, ghi nhận server JSON sơ khai và các lỗi template đã sửa; thêm hướng dẫn giữ server chạy trong terminal riêng và mở client riêng. Đối chiếu mã server/client để liệt kê phần đã có và còn thiếu, bao gồm tham chiếu `deckManager` còn sót. Lần này chỉ chỉnh tài liệu; không sửa component, không chạy build hoặc test lại.
 
-
 ### 12/10/2026 — Resolve GitHub push conflict
 
 Nội dung prompt của người dùng:
@@ -376,6 +379,7 @@ Kết quả: hợp nhất `origin/main` vào `main`, giữ lịch sử hai nhán
 Kiểm tra merge: build client `build/Desktop_Debug` và build server sạch `build/merge-check-server` thành công; CTest integration đạt 1/1. Build server trong thư mục cũ gặp cache AUTOMOC lỗi thời; build sạch xác nhận mã hợp nhất hoạt động.
 
 ### 12/10/2026 — Implement `gameManager.pass_turn`
+### 12/10/2026 — Cập nhật tiến độ đồng hồ, báo lỗi và layout bàn cờ
 
 Nội dung prompt của người dùng:
 
@@ -398,3 +402,11 @@ Kết quả: bổ sung đầy đủ hai prompt của phiên làm việc này, ng
 ### 12/10/2026 — Implement `AssetsManager.cpp`
 
 Nội dung prompt của người dùng:
+Cập nhật README. Đồng thời note những thứ này để sau này tôi làm:
+
+1. Phần đồng hồ đếm ngược đã xong logic nhưng cần handle từ server và có thể thêm đồng hồ của đối thủ -> đã đến bước làm server.
+2. Phần báo lỗi vị trí đã xong hết bỏ đi đoạn khoang đỏ đi giờ chỉ thiếu âm thanh báo lỗi.
+3. Layout bàn cờ nhỏ hơn(có thể sẽ làm để thêm chế độ chơi).
+```
+
+Kết quả: cập nhật tiến độ theo thông tin chủ dự án cung cấp. Đánh dấu logic đồng hồ client đã xong, ghi việc xử lý thời gian ở server là bước tiếp theo và khả năng thêm đồng hồ đối thủ. Đánh dấu phản hồi vị trí sai đã xong, bỏ yêu cầu khoanh đỏ khỏi kế hoạch hiện hành, chỉ giữ âm thanh báo lỗi là việc còn thiếu. Ghi ý tưởng thu nhỏ layout bàn cờ để thêm chế độ chơi. Giữ nguyên prompt lịch sử; chỉ sửa README, không thay đổi mã nguồn hoặc chạy build/test.
